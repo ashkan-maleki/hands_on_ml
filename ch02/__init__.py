@@ -28,8 +28,12 @@ def run_ch02():
         strat_train_set = housing.loc[train_index]
         strat_test_set = housing.loc[test_index]
 
-    strata_ratio = strat_test_set["income_cat"].value_counts() / len(strat_test_set)
-    print(strata_ratio)
+    # strata_ratio = strat_test_set["income_cat"].value_counts() / len(strat_test_set)
+    # print(strata_ratio)
+    for set_ in (strat_train_set, strat_test_set):
+        set_.drop("income_cat", axis=1, inplace=True)
+
+
 
 
 
