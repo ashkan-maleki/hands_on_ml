@@ -4,6 +4,7 @@ from ch02.test_set import split_train_test, split_train_test_by_id
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def run_ch02():
@@ -33,6 +34,13 @@ def run_ch02():
     for set_ in (strat_train_set, strat_test_set):
         set_.drop("income_cat", axis=1, inplace=True)
 
+    housing = strat_train_set.copy()
+    # housing.plot(kind="scatter", x="longitude", y="latitude")
+    # housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
+    housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.4,
+                 s=housing["population"]/100, label="population", figsize=(10,7),
+                 c="median_house_value", cmap=plt.get_cmap("jet"), colorbar=True)
+    plt.show()
 
 
 
