@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from pandas.plotting import scatter_matrix
 
 
 def run_ch02():
@@ -22,7 +23,8 @@ def run_ch02():
     # train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)
     # print(len(train_set))
     # print(len(test_set))
-    housing["income_cat"] = pd.cut(housing["median_income"], bins=[0.,1.5,3.0,4.5, 6., np.inf], labels=[1,2,3,4,5])
+    housing["income_cat"] = pd.cut(housing["median_income"], bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+                                   labels=[1, 2, 3, 4, 5])
     # housing["income_cat"].hist()
     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
     for train_index, test_index in split.split(housing, housing["income_cat"]):
@@ -37,11 +39,13 @@ def run_ch02():
     housing = strat_train_set.copy()
     # housing.plot(kind="scatter", x="longitude", y="latitude")
     # housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
-    housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.4,
-                 s=housing["population"]/100, label="population", figsize=(10,7),
-                 c="median_house_value", cmap=plt.get_cmap("jet"), colorbar=True)
+    # housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.4,
+    #              s=housing["population"]/100, label="population", figsize=(10,7),
+    #              c="median_house_value", cmap=plt.get_cmap("jet"), colorbar=True)
+    # plt.show()
+    # corr_matrix = housing.corr()
+    # print(corr_matrix["median_house_value"].sort_values(ascending=False))
+
+    attributes = ["median_house_value", "median_income", "total_bedrooms", "housing_median_age"]
+    scatter_matrix(housing[attributes], figsize=(12, 8))
     plt.show()
-
-
-
-
