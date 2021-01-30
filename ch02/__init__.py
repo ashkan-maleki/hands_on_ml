@@ -71,9 +71,23 @@ def run_ch02():
     housing_num = housing.drop("ocean_proximity", axis=1)
     imputer.fit(housing_num)
 
-    print(imputer.statistics_)
-    print(housing_num.median().values)
+    # print(imputer.statistics_)
+    # print(housing_num.median().values)
 
     X = imputer.transform(housing_num)
     housing_tr = pd.DataFrame(X, columns=housing_num.columns, index=housing_num.index)
+    housing_cat = housing[["ocean_proximity"]]
+    # print(housing_cat.head(10))
+    from sklearn.preprocessing import OrdinalEncoder
+    ordinal_encoder = OrdinalEncoder()
+    housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
+    # print(housing_cat_encoded[:10])
 
+    # print(ordinal_encoder.categories_)
+
+    from sklearn.preprocessing import OneHotEncoder
+    cat_encoder = OneHotEncoder()
+    housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
+    # print(housing_cat_1hot)
+    # print(housing_cat_1hot.toarray())
+    # print(cat_encoder.categories_)
