@@ -68,30 +68,60 @@ def run_ch02():
     housing["total_bedrooms"].fillna(median, inplace=True)
 
     from sklearn.impute import SimpleImputer
-    imputer = SimpleImputer(strategy="median")
+    # imputer = SimpleImputer(strategy="median")
     housing_num = housing.drop("ocean_proximity", axis=1)
-    imputer.fit(housing_num)
+    # imputer.fit(housing_num)
 
     # print(imputer.statistics_)
     # print(housing_num.median().values)
 
-    X = imputer.transform(housing_num)
-    housing_tr = pd.DataFrame(X, columns=housing_num.columns, index=housing_num.index)
+    # X = imputer.transform(housing_num)
+    # housing_tr = pd.DataFrame(X, columns=housing_num.columns, index=housing_num.index)
     housing_cat = housing[["ocean_proximity"]]
     # print(housing_cat.head(10))
     from sklearn.preprocessing import OrdinalEncoder
-    ordinal_encoder = OrdinalEncoder()
-    housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
+    # ordinal_encoder = OrdinalEncoder()
+    # housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
     # print(housing_cat_encoded[:10])
 
     # print(ordinal_encoder.categories_)
 
     from sklearn.preprocessing import OneHotEncoder
-    cat_encoder = OneHotEncoder()
-    housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
+    # cat_encoder = OneHotEncoder()
+    # housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
     # print(housing_cat_1hot)
     # print(housing_cat_1hot.toarray())
     # print(cat_encoder.categories_)
 
-    attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=False)
-    housing_extra_attribs = attr_adder.transform(housing.values)
+    # attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=False)
+    # housing_extra_attribs = attr_adder.transform(housing.values)
+
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import StandardScaler
+
+    num_pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy="median")),
+        ('attribs_adder', CombinedAttributesAdder()),
+        ('std_scaler', StandardScaler())
+    ])
+    housing_num_tr = num_pipeline.fit_transform((housing_num))
+
+    from sklearn.compose import ColumnTransformer
+
+    num_attribs = list(housing_num)
+    cat_attribs = ["ocean_proximity"]
+
+    full_pipeline = ColumnTransformer([
+        ("num", num_pipeline, num_attribs),
+        ("cat", OneHotEncoder(), cat_attribs)
+    ])
+    housing_prepared = full_pipeline.fit_transform(housing)
+    from sklearn.linear_model import LinearRegression
+    lin_reg = LinearRegression()
+    lin_reg.fit(housing_prepared, housing_labels)
+
+    some_data = housing.iloc[:5]
+    some_labels = housing_labels.iloc[:5]
+    some_data_prepared = full_pipeline.transform(some_data)
+    print("Predictions", lin_reg.predict(some_data_prepared))
+    print("Labels", list(some_labels))
