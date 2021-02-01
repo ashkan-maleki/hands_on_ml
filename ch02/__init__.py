@@ -1,6 +1,7 @@
 from ch02.fetch_data import fetch_housing_data, load_housing_data
 from ch02.look_at_data import take_quick_look_at_data, show_housing_hist
 from ch02.test_set import split_train_test, split_train_test_by_id
+from ch02.combined_attribute_adder import CombinedAttributesAdder
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
 import numpy as np
 import pandas as pd
@@ -91,3 +92,6 @@ def run_ch02():
     # print(housing_cat_1hot)
     # print(housing_cat_1hot.toarray())
     # print(cat_encoder.categories_)
+
+    attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=False)
+    housing_extra_attribs = attr_adder.transform(housing.values)
