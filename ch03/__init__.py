@@ -116,21 +116,13 @@ def run_ch03():
     from sklearn.metrics import roc_curve
     fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)
 
-    def plot_roc_curve(fbr, tpr, label=None):
+    def plot_roc_curve(fpr, tpr, label=None):
         plt.plot(fpr, tpr, linewidth=2, label=label)
-        plt.plot([0, 1], [0, 1], 'k--')
+        plt.plot([0, 1], [0, 1], 'k--')  # dashed diagonal
         plt.axis([0, 1, 0, 1])  # Not shown in the book
         plt.xlabel('False Positive Rate (Fall-Out)', fontsize=16)  # Not shown
         plt.ylabel('True Positive Rate (Recall)', fontsize=16)  # Not shown
         plt.grid(True)
-
-    # def plot_roc_curve(fpr, tpr, label=None):
-    #     plt.plot(fpr, tpr, linewidth=2, label=label)
-    #     plt.plot([0, 1], [0, 1], 'k--')  # dashed diagonal
-    #     plt.axis([0, 1, 0, 1])  # Not shown in the book
-    #     plt.xlabel('False Positive Rate (Fall-Out)', fontsize=16)  # Not shown
-    #     plt.ylabel('True Positive Rate (Recall)', fontsize=16)  # Not shown
-    #     plt.grid(True)
 
     plot_roc_curve(fpr, tpr)
     plt.show()
@@ -151,4 +143,35 @@ def run_ch03():
     plot_roc_curve(fpr_forest, tpr_forest, "Random Forest")
     plt.legend(loc="lower right")
     plt.show()
+
+    from sklearn.svm import SVC
+
+    svm_clf = SVC()
+    svm_clf.fit(X_train, y_train)
+    svm_clf.predict([some_digit])
+
+    some_digit_scores = svm_clf.decision_function([some_digit])
+
+    np.argmax(some_digit_scores)
+    print(svm_clf.classes_)
+    print(svm_clf.classes_[5])
+
+    from sklearn.multiclass import OneVsRestClassifier
+    ovr_clf = OneVsRestClassifier(SVC())
+    ovr_clf.fit(X_train, y_train)
+
+    print(len(ovr_clf.estimators_))
+
+    sgd_clf.fit(X_train, y_train)
+    sgd_clf.predict([some_digit])
+
+    sgd_clf.decision_function([some_digit])
+
+    cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring="accuracy")
+
+    from sklearn.preprocessing import StandardScaler
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))
+    cross_val_score(sgd_clf, X_train_scaled, y_train, cv=3, scoring="accuracy")
+
 
