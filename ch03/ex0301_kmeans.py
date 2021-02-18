@@ -20,7 +20,7 @@ def run_ex_0301():
     param_grid = [{'weights': ["uniform", "distance"], 'n_neighbors': [3, 4, 5]}]
     knn_clf = KNeighborsClassifier()
     grid_search = GridSearchCV(knn_clf, param_grid, cv=5, verbose=3)
-    grid_search.fit(X_train, y_train)
+    grid_search.fit(X_trai, y_train)
 
     print(grid_search.best_params_)
     print(grid_search.best_score_)

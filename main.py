@@ -1,6 +1,4 @@
-from ch03.ex0301_kmeans import run_ex_0301
-
-
+from ch04 import run_ch04
 
 if __name__ == "__main__":
-    run_ex_0301()
+    run_ch04()
